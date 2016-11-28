@@ -14,5 +14,6 @@ public class Main {
   public static void main(String[] args) {
     System.out.println("Paccтояние между точками = "+ distance(p1,p2) );
     System.out.println("Paccтояние между точками = "+ p2.distanceBetweenPoints(p1,p2) );
+    System.out.println("Paccтояние между точками = "+ p1.distanceBetweenPoints(p2) );
   }
 }
