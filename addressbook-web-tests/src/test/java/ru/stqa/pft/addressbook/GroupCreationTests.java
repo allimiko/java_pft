@@ -12,6 +12,15 @@ import org.openqa.selenium.*;
 public class GroupCreationTests {
   WebDriver wd;
 
+  public static boolean isAlertPresent(FirefoxDriver wd) {
+    try {
+      wd.switchTo().alert();
+      return true;
+    } catch (NoAlertPresentException e) {
+      return false;
+    }
+  }
+
   @BeforeMethod
   public void setUp() throws Exception {
     System.setProperty("webdriver.gecko.driver", "D:\\drivers\\geckodriver.exe");
@@ -33,10 +42,15 @@ public class GroupCreationTests {
 
   @Test
   public void testGroupCreation() {
+    gotoGroupPage();
     initGroupCreation();
     fillGroupForm(new GroupDate("Test 1", "test 1", "Test 1", "Test 1"));
     submitGroupCreation();
     returnToGroupPage();
+  }
+
+  private void gotoGroupPage() {
+    wd.findElement(By.linkText("groups")).click();
   }
 
   private void returnToGroupPage() {
@@ -69,14 +83,5 @@ public class GroupCreationTests {
   @AfterMethod
   public void tearDown() {
     wd.quit();
-  }
-
-  public static boolean isAlertPresent(FirefoxDriver wd) {
-    try {
-      wd.switchTo().alert();
-      return true;
-    } catch (NoAlertPresentException e) {
-      return false;
-    }
   }
 }
