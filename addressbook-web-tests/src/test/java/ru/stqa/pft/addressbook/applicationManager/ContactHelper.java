@@ -1,6 +1,7 @@
 package ru.stqa.pft.addressbook.applicationManager;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import ru.stqa.pft.addressbook.model.ContactDate;
 
@@ -9,7 +10,7 @@ import ru.stqa.pft.addressbook.model.ContactDate;
  */
 public class ContactHelper extends HelperBase {
 
-  public ContactHelper(ChromeDriver wd) {
+  public ContactHelper( WebDriver wd) {
     super(wd);
   }
 
@@ -24,7 +25,7 @@ public class ContactHelper extends HelperBase {
 
   public void submitContactCreation() {
 
-    click(By.xpath(".//*[@id='content']/form/input[21]"));
+    click(By.xpath("//*[@id='content']/*/input[@value='Enter']"));
   }
   public void selectContact() {
 

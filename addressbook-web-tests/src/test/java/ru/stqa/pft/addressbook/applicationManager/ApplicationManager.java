@@ -2,34 +2,49 @@ package ru.stqa.pft.addressbook.applicationManager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.BrowserType;
 import ru.stqa.pft.addressbook.model.ContactDate;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
 public class ApplicationManager {
-  ChromeDriver wd;
+  WebDriver wd;
 
   private SessionHelper sessionHelper;
   private  GroupHelper groupHelper;
   private ContactHelper contactHelper;
   private NavigationHelper navigationHelper;
+  private String broser;
 
+  public ApplicationManager(String broser) {
+    this.broser = broser;
+  }
 
 
   public void init() {
-    System.setProperty("webdriver.chrome.driver", "D:\\ChromeDriver\\chromedriver.exe");
-    wd = new ChromeDriver();
-    wd.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
-    wd.manage().window().maximize();
-    wd.get("http://localhost/addressbook/group.php");
-    groupHelper = new GroupHelper(wd);
-    navigationHelper = new NavigationHelper(wd);
-    sessionHelper = new SessionHelper(wd);
-    contactHelper = new ContactHelper(wd);
-    sessionHelper.login("admin", "secret");
-  }
+      if (Objects.equals(broser, BrowserType.CHROME)) {
+        wd = new ChromeDriver();
+      } else if (Objects.equals(broser, BrowserType.FIREFOX)) {
+        wd = new FirefoxDriver();
+      } else if (Objects.equals(broser, BrowserType.IE)) {
+        wd = new InternetExplorerDriver();
+      }
+
+      wd.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+      wd.manage().window().maximize();
+      wd.get("http://localhost/addressbook/group.php");
+      groupHelper = new GroupHelper(wd);
+      navigationHelper = new NavigationHelper(wd);
+      sessionHelper = new SessionHelper(wd);
+      contactHelper = new ContactHelper(wd);
+      sessionHelper.login("admin", "secret");
+    }
 
   private void login(String username, String password) {
    wd.findElement(By.name("pass")).click();
