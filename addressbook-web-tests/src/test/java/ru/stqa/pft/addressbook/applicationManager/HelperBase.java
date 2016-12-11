@@ -1,14 +1,15 @@
 package ru.stqa.pft.addressbook.applicationManager;
 
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.*;
 
 
 public class HelperBase {
-  protected  WebDriver wd;
+  private   WebDriver wd;
+  public WebElement element;
+
+  public WebElement findElement(By locator){
+  return   element = wd.findElement(locator);
+  }
 
   public HelperBase( WebDriver wd) {
     this.wd = wd;
@@ -19,10 +20,10 @@ public class HelperBase {
   }
 
   public void type(By locator, String text) {
-    click(locator);
     if (text != null){
-      wd.findElement(locator).clear();
-      wd.findElement(locator).sendKeys(text);
+      element = findElement(locator);
+      element.clear();
+      element.sendKeys(text);
 
     }
   }
@@ -32,6 +33,7 @@ public class HelperBase {
       wd.switchTo().alert();
     } catch (NoAlertPresentException ex) {
       ex.printStackTrace();
+
     }
     return true;
   }
