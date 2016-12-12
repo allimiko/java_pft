@@ -36,6 +36,15 @@ public class ContactHelper extends HelperBase {
     click(By.xpath(".//input[@value='Delete']"));
 
   }
+
+  public void initContactModification() {
+    click(By.xpath(".//*[@id='maintable']/tbody/tr[2]/td[8]"));
+  }
+
+  public void submitContactModification() {
+    click(By.xpath("//input[@value='Update']"));
+  }
+
 }
 
 
