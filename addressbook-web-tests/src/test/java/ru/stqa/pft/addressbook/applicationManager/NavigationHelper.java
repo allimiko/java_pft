@@ -4,9 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-/**
- * Created by Monsters on 04.12.2016.
- */
+
 public class NavigationHelper extends HelperBase {
 
 
@@ -19,11 +17,19 @@ public class NavigationHelper extends HelperBase {
   }
 
   public void gotoContactPage() {
+    if (isElmentPresent(By.tagName("h1"))
+            && findElement(By.tagName("h1")).getText().equals("Groups")
+            && isElmentPresent(By.name("new"))){
+      return;
+    }
     click(By.linkText("add new"));
   }
 
   public void gotoHome() {
-    click(By.linkText("home"));
+    if (isElmentPresent(By.name("MainForm"))){
+      return;
+    }
+    click(By.xpath(".//*[@id='nav']/ul/li[1]/a"));
   }
 
 }
