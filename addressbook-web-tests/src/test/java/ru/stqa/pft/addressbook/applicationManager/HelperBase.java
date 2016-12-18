@@ -4,7 +4,7 @@ import org.openqa.selenium.*;
 
 
 public class HelperBase {
- private     WebDriver wd;
+  private   WebDriver wd;
   public WebElement element;
 
   public WebElement findElement(By locator){
@@ -22,11 +22,9 @@ public class HelperBase {
   public void type(By locator, String text) {
     if (text != null){
       element = findElement(locator);
-      String existingText = element.getAttribute("value");
-      if(!text.equals(existingText)){
-        element.clear();
-        element.sendKeys(text);
-      }
+      element.clear();
+      element.sendKeys(text);
+
     }
   }
   public  boolean isAlertPresent() {
@@ -40,13 +38,4 @@ public class HelperBase {
     return true;
   }
 
-  protected boolean isElmentPresent(By locator) {
-    try {
-      wd.findElement(locator);
-      return true;
-    } catch (NoSuchElementException ex) {
-
-      return false;
-    }
-  }
 }

@@ -6,13 +6,11 @@ public class GroupDate {
   private final String head;
   private final String footer;
 
-
   public GroupDate(String name, String header, String head, String footer) {
     this.name = name;
     this.header = header;
     this.head = head;
     this.footer = footer;
-
   }
 
   public String getName() {
@@ -30,6 +28,4 @@ public class GroupDate {
   public String getFooter() {
     return footer;
   }
-
-  }
-
+}

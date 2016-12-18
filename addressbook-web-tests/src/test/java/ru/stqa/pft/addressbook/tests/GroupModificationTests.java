@@ -4,15 +4,14 @@ import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.applicationManager.HelperBase;
 import ru.stqa.pft.addressbook.model.GroupDate;
 
-
+/**
+ * Created by Monsters on 04.12.2016.
+ */
 public class GroupModificationTests extends TestBase{
 
   @Test
   public void testCroupModification(){
     app.getNavigationHelper().gotoGroupPage();
-    if (! app.getGroupHelper().isThereAGroup()){
-      app.getGroupHelper().createGroup(new GroupDate("Test 1", null, null, null));
-    }
     app.getGroupHelper().selectGroup();
     app.getGroupHelper().initGroupModification();
     app.getGroupHelper().fillGroupForm(new GroupDate("Test 1", "test 1", "Test 1", "Test 1"));
