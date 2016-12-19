@@ -1,8 +1,11 @@
 package ru.stqa.pft.addressbook.applicationManager;
 
+import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
 import ru.stqa.pft.addressbook.model.ContactDate;
 
 /**
@@ -10,17 +13,24 @@ import ru.stqa.pft.addressbook.model.ContactDate;
  */
 public class ContactHelper extends HelperBase {
 
-  public ContactHelper( WebDriver wd) {
+  public ContactHelper(WebDriver wd) {
     super(wd);
   }
 
-  public void fillContactForm(ContactDate contactDate) {
+  public void fillContactForm(ContactDate contactDate, boolean creation) {
     type(By.name("firstname"), contactDate.getFirstname());
     type(By.name("middlename"), contactDate.getMiddlename());
     type(By.name("lastname"), contactDate.getLastname());
     type(By.name("nickname"), contactDate.getNickname());
     type(By.name("company"), contactDate.getCompany());
     type(By.name("home"), contactDate.getHome());
+
+
+    if (creation){
+      new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactDate.getGroup());
+    } else {
+      Assert.assertFalse(isElementPresent(By.name("new_group")));
+    }
   }
 
   public void submitContactCreation() {
@@ -44,6 +54,16 @@ public class ContactHelper extends HelperBase {
   public void submitContactModification() {
     click(By.xpath("//input[@value='Update']"));
   }
+
+  public void createContact(ContactDate contact, boolean creation) {
+    fillContactForm(contact,creation);
+    submitContactCreation();
+  }
+
+  public boolean isThereContact() {
+    return isElementPresent(By.name("selected[]"));
+  }
+
 
 }
 
