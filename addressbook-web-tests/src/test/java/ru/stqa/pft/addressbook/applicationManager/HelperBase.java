@@ -4,7 +4,7 @@ import org.openqa.selenium.*;
 
 
 public class HelperBase {
-  private   WebDriver wd;
+  public    WebDriver wd;
   public WebElement element;
 
   public WebElement findElement(By locator){
@@ -37,5 +37,15 @@ public class HelperBase {
     }
     return true;
   }
+
+  protected boolean isElementPresent(By locator) {
+    try {
+      wd.findElement(locator);
+      return true;
+    } catch (NoSuchElementException ex) {
+      return false;
+    }
+  }
+
 
 }
