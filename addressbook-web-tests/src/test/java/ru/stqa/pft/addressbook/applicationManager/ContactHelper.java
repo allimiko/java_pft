@@ -4,9 +4,13 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 import ru.stqa.pft.addressbook.model.ContactDate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Monsters on 04.12.2016.
@@ -37,9 +41,9 @@ public class ContactHelper extends HelperBase {
 
     click(By.xpath("//*[@id='content']/*/input[@value='Enter']"));
   }
-  public void selectContact() {
+  public void selectContact(int index) {
+    wd.findElements(By.name("selected[]")).get(index).click();
 
-    click(By.name("selected[]"));
   }
 
   public void deleteSelectedContact() {
@@ -47,8 +51,8 @@ public class ContactHelper extends HelperBase {
 
   }
 
-  public void initContactModification() {
-    click(By.xpath(".//*[@id='maintable']/tbody/tr[2]/td[8]"));
+  public void initContactModification(int index) {
+    wd.findElements(By.xpath(".//*[@id='maintable']/tbody/tr/td[8]")).get(index).click();
   }
 
   public void submitContactModification() {
@@ -65,6 +69,21 @@ public class ContactHelper extends HelperBase {
   }
 
 
+    //public int getContactCount() {
+      //return wd.findElements(By.name("selected[]")).size();
+    //}
+
+  public List<ContactDate > getContactList() {
+    List<ContactDate> contactDates = new ArrayList<>();
+    List<WebElement>elements = wd.findElements(By.xpath(".//*[@id='maintable']/tbody/tr/td[1]"));
+    for (WebElement element : elements) {
+      String name = element.getText();
+      int id =Integer.parseInt(element.findElement(By.tagName("input")).getAttribute("id"));
+      ContactDate contactDate = new ContactDate( id, null, null, null, null, null, null,null);
+      contactDates.add(contactDate);
+    }
+    return contactDates;
+  }
 }
 
 

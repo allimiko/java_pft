@@ -1,8 +1,12 @@
 package ru.stqa.pft.addressbook.tests;
 
 
+import org.junit.Assert;
 import org.testng.annotations.Test;
-import ru.stqa.pft.addressbook.model.GroupDate;
+import ru.stqa.pft.addressbook.model.GroupData;
+
+import java.util.HashSet;
+import java.util.List;
 
 
 public class GroupCreationTests extends TestBase {
@@ -11,7 +15,22 @@ public class GroupCreationTests extends TestBase {
   @Test
   public void testGroupCreation() {
     app.getNavigationHelper().gotoGroupPage();
-    app.getGroupHelper().createGroup(new GroupDate("Test 1", "test 1", null, null));
+    List<GroupData> before = app.getGroupHelper().getGroupList();
+    GroupData group = new GroupData("Test 1", "test 1", null, null);
+    app.getGroupHelper().createGroup(group);
+    List<GroupData> after = app.getGroupHelper().getGroupList();
+    Assert.assertEquals(after.size(), before.size() +1);
+
+
+    int max = 0;
+    for (GroupData g: after){
+      if(g.getId()> max){
+        max = g.getId();
+      }
+    }
+    group.setId(max);
+    before.add(group);
+    Assert.assertEquals(new HashSet<Object>(after), new HashSet<Object>(before));
   }
 
 }
