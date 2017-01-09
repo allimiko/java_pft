@@ -9,6 +9,7 @@ import org.openqa.selenium.*;
 import ru.stqa.pft.addressbook.model.ContactDate;
 import ru.stqa.pft.addressbook.model.GroupData;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -24,16 +25,11 @@ public class ContactCreation extends TestBase {
     List<ContactDate> after = app.getContactHelper().getContactList();
     Assert.assertEquals(after.size(), before.size() + 1);
 
-
-    int max = 0;
-    for (ContactDate g: after){
-      if(g.getId()> max){
-        max = g.getId();
-      }
-    }
-    contact.setId(max);
+    Comparator<? super ContactDate> byId = (q1, q2) -> Integer.compare(q1.getId(), q2.getId());
     before.add(contact);
-    Assert.assertEquals(new HashSet<Object>(after), new HashSet<Object>(before));
+    before.sort(byId);
+    after.sort(byId);
+    Assert.assertEquals( before, after);
   }
 
 }

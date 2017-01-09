@@ -11,7 +11,7 @@ public class ContactDate {
   private String group;
 
   public ContactDate(String firstname, String middlename, String lastname, String nickname, String company, String home, String group) {
-    this.id = 0;
+    this.id = Integer.MAX_VALUE;
     this.firstname = firstname;
     this.middlename = middlename;
     this.lastname = lastname;
@@ -85,7 +85,6 @@ public class ContactDate {
 
     ContactDate that = (ContactDate) o;
 
-    if (id != that.id) return false;
     if (firstname != null ? !firstname.equals(that.firstname) : that.firstname != null) return false;
     if (middlename != null ? !middlename.equals(that.middlename) : that.middlename != null) return false;
     return lastname != null ? lastname.equals(that.lastname) : that.lastname == null;
@@ -93,8 +92,7 @@ public class ContactDate {
 
   @Override
   public int hashCode() {
-    int result = id;
-    result = 31 * result + (firstname != null ? firstname.hashCode() : 0);
+    int result = firstname != null ? firstname.hashCode() : 0;
     result = 31 * result + (middlename != null ? middlename.hashCode() : 0);
     result = 31 * result + (lastname != null ? lastname.hashCode() : 0);
     return result;
