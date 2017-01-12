@@ -16,20 +16,32 @@ public class ContactModificationTest extends TestBase {
 
   @Test
   public void testContactModification(){
-    app.getNavigationHelper().gotoHome();
-    if (! app.getContactHelper().isThereContact()){
-      app.getNavigationHelper().gotoContactPage();
-      app.getContactHelper().createContact(new ContactDate(null, null,"test3","test4","test5","test6","test 1" ));
+    app.goTo().gotoHome();
+    if (! app.contact().isThereContact()){
+      app.goTo().gotoHome();
+      app.contact().createContact(new ContactDate()
+              .withLastname("test3")
+              .withNickname("test4")
+              .withCompany("test4")
+              .withHome("test5")
+              .withGroup("test 1"));
     }
-    List<ContactDate> before = app.getContactHelper().getContactList();
-    app.getContactHelper().initContactModification(before.size() -1);
-    ContactDate contactDate = new ContactDate(before.get(before.size()-1).getId(),before.get(before.size()-1).getFirstname(),before.get(before.size()-1).getMiddlename(),before.get(before.size()-1).getLastname(),"test55","test55", null,null);
-    app.getContactHelper().fillContactForm(contactDate, false);
-    app.getContactHelper().submitContactModification();
-    List<ContactDate> after = app.getContactHelper().getContactList();
+    List<ContactDate> before = app.contact().getContactList();
+    int index = before.size() -1;
+    app.contact().initContactModification(index);
+   // ContactDate contactDate = new ContactDate(before.get(index).getId(),before.get(index).getFirstname(),before.get(index).getMiddlename(),before.get(index).getLastname(),"test55","test55", null,null);
+    ContactDate contactDate = new ContactDate().withId(before.get(index).getId())
+            .withFirstname(before.get(index).getFirstname())
+            .withMiddlename(before.get(index).getMiddlename())
+            .withLastname(before.get(index).getLastname())
+            .withNickname("test55")
+            .withHome("test55");
+    app.contact().fillContactForm(contactDate, false);
+    app.contact().submitContactModification();
+    List<ContactDate> after = app.contact().getContactList();
     Assert.assertEquals(after.size(), before.size() );
 
-    before.remove(before.size()-1);
+    before.remove(index);
     before.add(contactDate);
     Comparator<? super ContactDate> byId = (q1, q2) -> Integer.compare(q1.getId(), q2.getId());
     before.sort(byId);

@@ -13,20 +13,26 @@ public class ContactDeletTests extends TestBase {
 
   @Test
   public void testDeletTests() throws InterruptedException {
-    app.getNavigationHelper().gotoHome();
-    if (! app.getContactHelper().isThereContact()){
-      app.getNavigationHelper().gotoContactPage();
-      app.getContactHelper().createContact(new ContactDate("test1", "test5","test3","test4","test5","test6","Test 1"));
+    app.goTo().gotoHome();
+    if (! app.contact().isThereContact()){
+      app.goTo().gotoHome();
+      app.contact().createContact(new ContactDate()
+              .withLastname("test3")
+              .withNickname("test4")
+              .withCompany("test4")
+              .withHome("test5")
+              .withGroup("test 1"));
 
     }
-    List<ContactDate> before = app.getContactHelper().getContactList();
-    app.getContactHelper().selectContact(before.size()-1);
-    app.getContactHelper().deleteSelectedContact();
-    app.getContactHelper().isAlertPresent();
-    List<ContactDate> after = app.getContactHelper().getContactList();
-    Assert.assertEquals(after.size(), before.size() - 1);
+    List<ContactDate> before = app.contact().getContactList();
+    int index = before.size() -1;
+    app.contact().selectContact(index);
+    app.contact().deleteSelectedContact();
+    app.contact().isAlertPresent();
+    List<ContactDate> after = app.contact().getContactList();
+    Assert.assertEquals(after.size(), index);
 
-    before.remove(before.size()-1);
+    before.remove(index);
     Assert.assertEquals(after, before);
 
   }

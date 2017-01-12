@@ -1,35 +1,16 @@
 package ru.stqa.pft.addressbook.model;
 
 public class ContactDate {
-  private  int id;
-  private final String firstname;
-  private final String middlename;
-  private final String lastname;
-  private final String nickname;
-  private final String company;
-  private final String home;
+  private  int id = Integer.MAX_VALUE;;
+  private  String firstname;
+  private  String middlename;
+  private  String lastname;
+  private  String nickname;
+  private  String company;
+  private  String home;
   private String group;
 
-  public ContactDate(String firstname, String middlename, String lastname, String nickname, String company, String home, String group) {
-    this.id = Integer.MAX_VALUE;
-    this.firstname = firstname;
-    this.middlename = middlename;
-    this.lastname = lastname;
-    this.nickname = nickname;
-    this.company = company;
-    this.home = home;
-    this.group = group;
-  }
-  public ContactDate( int id, String firstname, String middlename, String lastname, String nickname, String company, String home, String group ) {
-    this.id = id;
-    this.firstname = firstname;
-    this.middlename = middlename;
-    this.lastname = lastname;
-    this.nickname = nickname;
-    this.company = company;
-    this.home = home;
-    this.group = group;
-  }
+
 
   public String getFirstname() {
     return firstname;
@@ -65,7 +46,45 @@ public class ContactDate {
 
   public int getId() {
     return id;
+  }
 
+  public ContactDate withFirstname(String firstname) {
+    this.firstname = firstname;
+    return this;
+  }
+
+  public ContactDate withMiddlename(String middlename) {
+    this.middlename = middlename;
+    return this;
+  }
+
+  public ContactDate withLastname(String lastname) {
+    this.lastname = lastname;
+    return this;
+  }
+
+  public ContactDate withNickname(String nickname) {
+    this.nickname = nickname;
+    return this;
+  }
+
+  public ContactDate withCompany(String company) {
+    this.company = company;
+    return this;
+  }
+
+  public ContactDate withHome(String home) {
+    this.home = home;
+    return this;
+  }
+
+  public ContactDate withGroup(String group) {
+    this.group = group;
+    return this;
+  }
+ public ContactDate withId(int id) {
+    this.id = id;
+    return this;
   }
 
   @Override

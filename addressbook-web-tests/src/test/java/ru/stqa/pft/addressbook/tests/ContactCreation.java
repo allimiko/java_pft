@@ -17,19 +17,25 @@ public class ContactCreation extends TestBase {
 
   @Test
   public void createNewContact(){
-    app.getNavigationHelper().gotoHome();
-    List<ContactDate> before = app.getContactHelper().getContactList();
-    app.getNavigationHelper().gotoContactPage();
-    ContactDate contact = new ContactDate(null, null,null,"test4","test5","test6","Test 1" );
-    app.getContactHelper().createContact(contact);
-    List<ContactDate> after = app.getContactHelper().getContactList();
+    app.goTo().gotoHome();
+    List<ContactDate> before = app.contact().getContactList();
+    app.goTo().contactPage();
+    ContactDate contact = new ContactDate()
+            .withLastname("test3")
+            .withNickname("test4")
+            .withCompany("test4")
+            .withHome("test5")
+            .withGroup("Test 1");
+    app.contact().createContact(contact);
+    List<ContactDate> after = app.contact().getContactList();
     Assert.assertEquals(after.size(), before.size() + 1);
 
-    Comparator<? super ContactDate> byId = (q1, q2) -> Integer.compare(q1.getId(), q2.getId());
     before.add(contact);
+    Comparator<? super ContactDate> byId = (q1, q2) -> Integer.compare(q1.getId(), q2.getId());
+
     before.sort(byId);
     after.sort(byId);
-    Assert.assertEquals( before, after);
+    Assert.assertEquals( after, before);
   }
 
 }
