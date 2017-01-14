@@ -11,7 +11,8 @@ public class ContactDate {
   private String group;
 
 
-  public String getFirstname() {
+
+    public String getFirstname() {
     return firstname;
   }
 
