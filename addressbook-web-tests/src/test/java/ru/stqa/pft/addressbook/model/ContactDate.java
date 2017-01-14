@@ -1,7 +1,7 @@
 package ru.stqa.pft.addressbook.model;
 
 public class ContactDate {
-  private  int id = Integer.MAX_VALUE;;
+  private  int id = Integer.MAX_VALUE;
   private  String firstname;
   private  String middlename;
   private  String lastname;
@@ -9,7 +9,6 @@ public class ContactDate {
   private  String company;
   private  String home;
   private String group;
-
 
 
   public String getFirstname() {
@@ -104,16 +103,14 @@ public class ContactDate {
 
     ContactDate that = (ContactDate) o;
 
-    if (firstname != null ? !firstname.equals(that.firstname) : that.firstname != null) return false;
-    if (middlename != null ? !middlename.equals(that.middlename) : that.middlename != null) return false;
-    return lastname != null ? lastname.equals(that.lastname) : that.lastname == null;
+    if (id != that.id) return false;
+    return firstname != null ? firstname.equals(that.firstname) : that.firstname == null;
   }
 
   @Override
   public int hashCode() {
-    int result = firstname != null ? firstname.hashCode() : 0;
-    result = 31 * result + (middlename != null ? middlename.hashCode() : 0);
-    result = 31 * result + (lastname != null ? lastname.hashCode() : 0);
+    int result = id;
+    result = 31 * result + (firstname != null ? firstname.hashCode() : 0);
     return result;
   }
 }

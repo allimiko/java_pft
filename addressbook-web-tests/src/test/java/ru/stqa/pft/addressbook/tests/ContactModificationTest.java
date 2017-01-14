@@ -8,6 +8,7 @@ import ru.stqa.pft.addressbook.model.GroupData;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Monsters on 09.12.2016.
@@ -16,36 +17,35 @@ public class ContactModificationTest extends TestBase {
 
   @Test
   public void testContactModification(){
-    app.goTo().gotoHome();
+    app.goTo().contactPage();
     if (! app.contact().isThereContact()){
-      app.goTo().gotoHome();
+      app.goTo().contactPage();
       app.contact().createContact(new ContactDate()
               .withLastname("test3")
               .withNickname("test4")
               .withCompany("test4")
               .withHome("test5")
-              .withGroup("test 1"));
+              .withGroup("Test 1"));
     }
-    List<ContactDate> before = app.contact().getContactList();
-    int index = before.size() -1;
-    app.contact().initContactModification(index);
+    Set<ContactDate> before = app.contact().allContact();
+    ContactDate modifiedContact = before.iterator().next();
+    app.contact().initContactModification(modifiedContact);
    // ContactDate contactDate = new ContactDate(before.get(index).getId(),before.get(index).getFirstname(),before.get(index).getMiddlename(),before.get(index).getLastname(),"test55","test55", null,null);
-    ContactDate contactDate = new ContactDate().withId(before.get(index).getId())
-            .withFirstname(before.get(index).getFirstname())
-            .withMiddlename(before.get(index).getMiddlename())
-            .withLastname(before.get(index).getLastname())
+    ContactDate contactDate = new ContactDate().withId( modifiedContact.getId())
+           // .withFirstname( modifiedContact.getFirstname())
+           // .withMiddlename( modifiedContact.getMiddlename())
+          //  .withLastname( modifiedContact.getLastname())
+            .withFirstname("test45")
+            .withMiddlename("test45")
+            .withLastname("test45")
             .withNickname("test55")
             .withHome("test55");
-    app.contact().fillContactForm(contactDate, false);
-    app.contact().submitContactModification();
-    List<ContactDate> after = app.contact().getContactList();
+    app.contact().modification(contactDate);
+    Set<ContactDate> after = app.contact().allContact();
     Assert.assertEquals(after.size(), before.size() );
 
-    before.remove(index);
-    before.add(contactDate);
-    Comparator<? super ContactDate> byId = (q1, q2) -> Integer.compare(q1.getId(), q2.getId());
-    before.sort(byId);
-    after.sort(byId);
+    before.remove(contactDate);
+    before.add(modifiedContact);
     Assert.assertEquals(before, after);
   }
 }

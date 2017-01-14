@@ -6,8 +6,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.applicationManager.HelperBase;
 import ru.stqa.pft.addressbook.model.ContactDate;
+import ru.stqa.pft.addressbook.model.GroupData;
 
 import java.util.List;
+import java.util.Set;
 
 public class ContactDeletTests extends TestBase {
 
@@ -15,26 +17,27 @@ public class ContactDeletTests extends TestBase {
   public void testDeletTests() throws InterruptedException {
     app.goTo().gotoHome();
     if (! app.contact().isThereContact()){
-      app.goTo().gotoHome();
+      app.goTo().contactPage();
       app.contact().createContact(new ContactDate()
               .withLastname("test3")
               .withNickname("test4")
               .withCompany("test4")
               .withHome("test5")
-              .withGroup("test 1"));
+              .withGroup("Test 1"));
 
     }
-    List<ContactDate> before = app.contact().getContactList();
-    int index = before.size() -1;
-    app.contact().selectContact(index);
-    app.contact().deleteSelectedContact();
-    app.contact().isAlertPresent();
-    List<ContactDate> after = app.contact().getContactList();
-    Assert.assertEquals(after.size(), index);
+    Set<ContactDate> before = app.contact().allContact();
+    ContactDate contact = before.iterator().next();
+    app.contact().deleteContact(contact);
+    Set<ContactDate> after = app.contact().allContact();
+    Assert.assertEquals(after.size(),before.size() -1);
 
-    before.remove(index);
+    before.remove(contact);
     Assert.assertEquals(after, before);
 
   }
 
-}
+
+  }
+
+

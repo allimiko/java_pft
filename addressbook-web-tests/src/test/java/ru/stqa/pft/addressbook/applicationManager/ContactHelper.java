@@ -10,7 +10,9 @@ import org.openqa.selenium.support.ui.Select;
 import ru.stqa.pft.addressbook.model.ContactDate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Monsters on 04.12.2016.
@@ -46,13 +48,18 @@ public class ContactHelper extends HelperBase {
 
   }
 
+  public void selectContactById(int id) {
+    wd.findElement(By.id(""+id+"")).click();
+}
+
   public void deleteSelectedContact() {
     click(By.xpath(".//input[@value='Delete']"));
 
   }
 
-  public void initContactModification(int index) {
-    wd.findElements(By.xpath(".//*[@id='maintable']/tbody/tr/td[8]")).get(index).click();
+  public void initContactModification(ContactDate date) {
+    selectContactById(date.getId());
+   wd.findElement(By.xpath(".//*[@id='maintable']/tbody/tr/td[8]")).click();
   }
 
   public void submitContactModification() {
@@ -62,6 +69,23 @@ public class ContactHelper extends HelperBase {
   public void createContact(ContactDate contact) {
     fillContactForm(contact,true);
     submitContactCreation();
+  }
+
+  public void deleteContact(int index) {
+    selectContact(index);
+    deleteSelectedContact();
+    isAlertPresent();
+  }
+
+  public void modification(ContactDate contactDate) {
+    fillContactForm(contactDate, false);
+    submitContactModification();
+  }
+
+  public void deleteContact(ContactDate contact) {
+    selectContactById(contact.getId());
+    deleteSelectedContact();
+    isAlertPresent();
   }
 
   public boolean isThereContact() {
@@ -90,7 +114,24 @@ public class ContactHelper extends HelperBase {
     }
     return contactDates;
   }
+
+  public Set<ContactDate > allContact() {
+    Set<ContactDate> contactDates = new HashSet<ContactDate>();
+    List<WebElement> elements1 = wd.findElements(By.xpath(".//input[@name='selected[]']"));
+    for (WebElement element : elements1) {
+      int id = Integer.parseInt(element.getAttribute("value"));
+      String lastName = wd.findElement(By.xpath(".//*[@id='maintable']/tbody/tr/td[2]")).getText();
+      ContactDate contactDateId = new ContactDate().withId(id).withLastname(lastName);
+      contactDates.add(contactDateId);
+    }
+
+
+    return contactDates;
+  }
+
+
 }
+
 
 
 
