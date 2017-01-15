@@ -70,6 +70,7 @@ public class ContactHelper extends HelperBase {
   public void createContact(ContactDate contact) {
     fillContactForm(contact,true);
     submitContactCreation();
+    contactCashe = null;
   }
 
   public void deleteContact(int index) {
@@ -81,11 +82,13 @@ public class ContactHelper extends HelperBase {
   public void modification(ContactDate contactDate) {
     fillContactForm(contactDate, false);
     submitContactModification();
+    contactCashe = null;
   }
 
   public void deleteContact(ContactDate contact) {
     selectContactById(contact.getId());
     deleteSelectedContact();
+    contactCashe = null;
     isAlertPresent();
   }
 
@@ -94,40 +97,28 @@ public class ContactHelper extends HelperBase {
   }
 
 
-    //public int getContactCount() {
-      //return wd.findElements(By.name("selected[]")).size();
-    //}
-
-  public List<ContactDate > getContactList() {
-    List<ContactDate> contactDates = new ArrayList<>();
-    List<WebElement>elements = wd.findElements(By.xpath(".//*[@id='maintable']/tbody/tr/td[2]"));
-    List<WebElement>elements1 = wd.findElements(By.tagName("selected[]"));
-    for (WebElement element : elements) {
-      String lastName = element.getText();
-      ContactDate contactDate = new ContactDate().withLastname(lastName);
-      contactDates.add(contactDate);
+    public int getContactCount() {
+    return wd.findElements(By.name("selected[]")).size();
     }
-    for (WebElement element : elements1) {
-       int id = Integer.parseInt(element.findElement(By.tagName("selected[]")).getAttribute("id"));
-      ContactDate contactDate = new ContactDate().withId(id);
-      contactDates.add(contactDate);
 
-    }
-    return contactDates;
-  }
+  private Contacts contactCashe = null;
 
   public Contacts allContact() {
-    Contacts contactDates = new Contacts();
+    if (contactCashe != null){
+      return new Contacts(contactCashe);
+
+    }
+    contactCashe = new Contacts();
     List<WebElement> elements1 = wd.findElements(By.xpath(".//input[@name='selected[]']"));
     for (WebElement element : elements1) {
       int id = Integer.parseInt(element.getAttribute("value"));
       String lastName = wd.findElement(By.xpath(".//*[@id='maintable']/tbody/tr/td[2]")).getText();
       ContactDate contactDateId = new ContactDate().withId(id).withLastname(lastName);
-      contactDates.add(contactDateId);
+      contactCashe.add(contactDateId);
     }
 
 
-    return contactDates;
+    return new Contacts(contactCashe);
   }
 
 

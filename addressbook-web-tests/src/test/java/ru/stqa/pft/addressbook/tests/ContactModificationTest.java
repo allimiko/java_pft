@@ -1,15 +1,13 @@
 package ru.stqa.pft.addressbook.tests;
 
-import org.junit.Assert;
+
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactDate;
 import ru.stqa.pft.addressbook.model.Contacts;
-import ru.stqa.pft.addressbook.model.GroupData;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -20,9 +18,9 @@ import static org.junit.Assert.assertEquals;
  */
 public class ContactModificationTest extends TestBase {
 
-  @Test
-  public void testContactModification() {
-    app.goTo().contactPage();
+  @BeforeMethod
+  public void ensurePreconditionsContact() {
+    app.goTo().gotoHome();
     if (!app.contact().isThereContact()) {
       app.goTo().contactPage();
       app.contact().createContact(new ContactDate()
@@ -32,6 +30,9 @@ public class ContactModificationTest extends TestBase {
               .withHome("test5")
               .withGroup("Test 1"));
     }
+  }
+    @Test
+    public void testContactModification() {
     Contacts before = app.contact().allContact();
     ContactDate modifiedContact = before.iterator().next();
     app.contact().initContactModification(modifiedContact);
@@ -42,8 +43,8 @@ public class ContactModificationTest extends TestBase {
             .withNickname("test55")
             .withHome("test55");
     app.contact().modification(contactDate);
+      assertThat(app.contact().getContactCount(),equalTo(before.size()));
     Contacts after = app.contact().allContact();
-    assertEquals(after.size(), before.size());
     assertThat(after, equalTo(before.withOut(contactDate).withAdded(modifiedContact)));
   }
 }
