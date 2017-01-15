@@ -27,7 +27,7 @@ public class ContactModificationTest extends TestBase {
               .withLastname("test3")
               .withNickname("test4")
               .withCompany("test4")
-              .withHome("test5")
+              .withHomePhone("test5")
               .withGroup("Test 1"));
     }
   }
@@ -41,7 +41,7 @@ public class ContactModificationTest extends TestBase {
             .withMiddlename("test45")
             .withLastname("test45")
             .withNickname("test55")
-            .withHome("test55");
+            .withHomePhone("test55");
     app.contact().modification(contactDate);
       assertThat(app.contact().getContactCount(),equalTo(before.size()));
     Contacts after = app.contact().allContact();

@@ -2,18 +2,13 @@ package ru.stqa.pft.addressbook.applicationManager;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 import ru.stqa.pft.addressbook.model.ContactDate;
 import ru.stqa.pft.addressbook.model.Contacts;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Monsters on 04.12.2016.
@@ -30,7 +25,13 @@ public class ContactHelper extends HelperBase {
     type(By.name("lastname"), contactDate.getLastname());
     type(By.name("nickname"), contactDate.getNickname());
     type(By.name("company"), contactDate.getCompany());
-    type(By.name("home"), contactDate.getHome());
+    type(By.name("email"), contactDate.getMail());
+    type(By.name("email2"), contactDate.getMail2());
+    type(By.name("email3"), contactDate.getMail3());
+    type(By.name("mobile"), contactDate.getMobilePhone());
+    type(By.name("work"), contactDate.getWorkPhone());
+    type(By.name("home"), contactDate.getHomePhone());
+    type(By.name("address"), contactDate.getAddress());
 
 
     if (creation){
@@ -106,21 +107,53 @@ public class ContactHelper extends HelperBase {
   public Contacts allContact() {
     if (contactCashe != null){
       return new Contacts(contactCashe);
-
     }
     contactCashe = new Contacts();
-    List<WebElement> elements1 = wd.findElements(By.xpath(".//input[@name='selected[]']"));
+    List<WebElement> elements1 = wd.findElements(By.name("entry"));
     for (WebElement element : elements1) {
-      int id = Integer.parseInt(element.getAttribute("value"));
-      String lastName = wd.findElement(By.xpath(".//*[@id='maintable']/tbody/tr/td[2]")).getText();
-      ContactDate contactDateId = new ContactDate().withId(id).withLastname(lastName);
+      List<WebElement>cells = element.findElements(By.tagName("td"));
+      int id = Integer.parseInt(cells.get(0).findElement(By.tagName("input")).getAttribute("value"));
+      String lastName = cells.get(1).getText();
+      String allphones = cells.get(5).getText();
+      String allMail = cells.get(4).getText();
+      String address = cells.get(3).getText();
+      ContactDate contactDateId = new ContactDate().withId(id).withLastname(lastName)
+              .withAllPhones(allphones).withAllMail(allMail).withAddress(address);
       contactCashe.add(contactDateId);
     }
-
-
     return new Contacts(contactCashe);
   }
 
+
+  public ContactDate infoFromEditForm(ContactDate contactDate) {
+    initContactModificationByID(contactDate.getId());
+    String firstname = wd.findElement(By.name("firstname")).getAttribute("value");
+    String lastname = wd.findElement(By.name("lastname")).getAttribute("value");
+    String address = wd.findElement(By.name("address")).getText();
+    String home = wd.findElement(By.name("home")).getAttribute("value");
+    String mobile = wd.findElement(By.name("mobile")).getAttribute("value");
+    String work = wd.findElement(By.name("work")).getAttribute("value");
+    wd.navigate().back();
+    return new ContactDate().withId(contactDate.getId()).withFirstname(firstname).withLastname(lastname)
+            .withHomePhone(home).withMobilePhone(mobile).withtWorkPhone(work).withAddress(address);
+
+  }
+
+  private void initContactModificationByID(int id) {
+    wd.findElement(By.cssSelector(String.format("a[href='edit.php?id=%s']",id))).click();
+  }
+
+  public ContactDate infoFromEditFormByMail(ContactDate contactDate) {
+    initContactModificationByID(contactDate.getId());
+    String mail = wd.findElement(By.name("email")).getAttribute("value");
+    String mail2 = wd.findElement(By.name("email2")).getAttribute("value");
+    String mail3 = wd.findElement(By.name("email3")).getAttribute("value");
+
+    wd.navigate().back();
+    return new ContactDate().withId(contactDate.getId()).withMail(mail).withMail2(mail2)
+            .withMail3(mail3);
+
+  }
 
 }
 
