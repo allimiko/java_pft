@@ -24,7 +24,7 @@ public class AddressCheck extends TestBase {
                     .withLastname("test3")
                     .withNickname("test4")
                     .withCompany("test4")
-                    .withHomePhone("+7 (111)")
+                    .withHomePhone("7 (111)")
                     .withMobilePhone("345-345")
                     .withtWorkPhone("456 456")
                     .withAddress("werwerewv 34343")
@@ -44,13 +44,7 @@ public class AddressCheck extends TestBase {
     private String mergeAddress(ContactDate contact) {
         return asList(contact.getAddress())
                 .stream().filter((s) -> ! s.equals(""))
-                .map(AddressCheck::cleaned)
                 .collect(Collectors.joining("\n"));
-    }
-
-    public static String cleaned(String phone) {
-        return  phone.replaceAll("\\s","").replaceAll("[- ()]", "");
-
     }
 
 }

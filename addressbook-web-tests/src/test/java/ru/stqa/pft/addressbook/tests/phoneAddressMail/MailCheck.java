@@ -24,7 +24,7 @@ public class MailCheck extends TestBase {
                    .withLastname("test3")
                     .withNickname("test4")
                     .withCompany("test4")
-                    .withHomePhone("+7 (111)")
+                    .withHomePhone("7 (111)")
                     .withMobilePhone("345-345")
                     .withtWorkPhone("456 456")
                     .withMail("erter@gmail.com")

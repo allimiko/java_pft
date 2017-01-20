@@ -12,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ContactDeletTests extends TestBase {
 
+
   @BeforeMethod
   public void ensurePreconditions(){
     app.goTo().gotoHome();

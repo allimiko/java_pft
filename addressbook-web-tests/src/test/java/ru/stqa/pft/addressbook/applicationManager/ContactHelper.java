@@ -32,13 +32,14 @@ public class ContactHelper extends HelperBase {
     type(By.name("work"), contactDate.getWorkPhone());
     type(By.name("home"), contactDate.getHomePhone());
     type(By.name("address"), contactDate.getAddress());
+    attach(By.name("photo"),contactDate.getPhoto());
 
 
-    if (creation){
-      new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactDate.getGroup());
-    } else {
-      Assert.assertFalse(isElementPresent(By.name("new_group")));
-    }
+    //if (creation){
+      //new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactDate.getGroup());
+    //} else {
+      //Assert.assertFalse(isElementPresent(By.name("new_group")));
+    //}
   }
 
   public void submitContactCreation() {
@@ -114,10 +115,12 @@ public class ContactHelper extends HelperBase {
       List<WebElement>cells = element.findElements(By.tagName("td"));
       int id = Integer.parseInt(cells.get(0).findElement(By.tagName("input")).getAttribute("value"));
       String lastName = cells.get(1).getText();
+      String firstName = cells.get(2).getText();
       String allphones = cells.get(5).getText();
       String allMail = cells.get(4).getText();
       String address = cells.get(3).getText();
-      ContactDate contactDateId = new ContactDate().withId(id).withLastname(lastName)
+
+      ContactDate contactDateId = new ContactDate().withId(id).withLastname(lastName).withFirstname(firstName)
               .withAllPhones(allphones).withAllMail(allMail).withAddress(address);
       contactCashe.add(contactDateId);
     }
@@ -148,14 +151,25 @@ public class ContactHelper extends HelperBase {
     String mail = wd.findElement(By.name("email")).getAttribute("value");
     String mail2 = wd.findElement(By.name("email2")).getAttribute("value");
     String mail3 = wd.findElement(By.name("email3")).getAttribute("value");
-
     wd.navigate().back();
     return new ContactDate().withId(contactDate.getId()).withMail(mail).withMail2(mail2)
             .withMail3(mail3);
 
   }
 
-}
+  //method for PageTest
+
+  private void initContactViewByID(int id) {
+    wd.findElement(By.cssSelector(String.format("a[href='view.php?id=%s']",id))).click();
+  }
+  public ContactDate infoFrom(ContactDate contactDate) {
+    initContactViewByID(contactDate.getId());
+    String content = wd.findElement(By.xpath(".//*[@id='content']")).getText();
+    wd.navigate().back();
+    return new ContactDate().withContent(content);
+  }
+  }
+
 
 
 

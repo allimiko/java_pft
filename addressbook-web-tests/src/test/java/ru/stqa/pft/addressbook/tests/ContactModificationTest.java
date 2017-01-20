@@ -24,27 +24,31 @@ public class ContactModificationTest extends TestBase {
     if (!app.contact().isThereContact()) {
       app.goTo().contactPage();
       app.contact().createContact(new ContactDate()
-              .withLastname("test3")
+              .withFirstname("test4")
+                      .withMiddlename("test 557")
+                      .withLastname("test3")
               .withNickname("test4")
               .withCompany("test4")
               .withHomePhone("test5")
-              .withGroup("Test 1"));
+              );
     }
   }
     @Test
     public void testContactModification() {
     Contacts before = app.contact().allContact();
     ContactDate modifiedContact = before.iterator().next();
-    app.contact().initContactModification(modifiedContact);
-    ContactDate contactDate = new ContactDate().withId(modifiedContact.getId())
+    ContactDate contactDate = new ContactDate()
+            .withId(modifiedContact.getId())
             .withFirstname("test45")
             .withMiddlename("test45")
             .withLastname("test45")
             .withNickname("test55")
-            .withHomePhone("test55");
+            .withHomePhone("test55")
+            .withCompany("test45");
+    app.contact().initContactModification(modifiedContact);
     app.contact().modification(contactDate);
       assertThat(app.contact().getContactCount(),equalTo(before.size()));
     Contacts after = app.contact().allContact();
-    assertThat(after, equalTo(before.withOut(contactDate).withAdded(modifiedContact)));
+    assertThat(after, equalTo(before.withAdded(contactDate).withOut(modifiedContact)));
   }
 }

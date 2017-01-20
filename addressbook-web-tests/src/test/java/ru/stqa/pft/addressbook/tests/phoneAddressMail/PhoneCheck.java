@@ -23,7 +23,7 @@ public class PhoneCheck extends TestBase {
                     .withLastname("test3")
                     .withNickname("test4")
                     .withCompany("test4")
-                    .withHomePhone("+7 (111)")
+                    .withHomePhone("7 (111)")
                     .withMobilePhone("345-345")
                     .withtWorkPhone("456 456")
                     .withGroup("Test 1"));
@@ -34,7 +34,6 @@ public class PhoneCheck extends TestBase {
         app.goTo().gotoHome();
         ContactDate contactDate = app.contact().allContact().iterator().next();
         ContactDate contactInfoFromeditForm = app.contact().infoFromEditForm(contactDate);
-
         assertThat(contactDate.getAllPhones(), equalTo(mergePhones(contactInfoFromeditForm)));
     }
 
@@ -46,7 +45,7 @@ public class PhoneCheck extends TestBase {
     }
 
     public static String cleaned(String phone) {
-        return  phone.replaceAll("\\s","").replaceAll("[- ()]", "");
+        return  phone.replaceAll("\\s","").replaceAll("[- () ]", "");
 
 }
 
