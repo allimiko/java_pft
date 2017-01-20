@@ -1,26 +1,61 @@
 package ru.stqa.pft.addressbook.tests;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import ru.stqa.pft.addressbook.model.ContactDate;
 import ru.stqa.pft.addressbook.model.Contacts;
+import ru.stqa.pft.addressbook.model.GroupData;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ContactCreation extends TestBase {
+  @DataProvider
+  public Iterator<Object[]> validContact() throws IOException {
+    List<Object[]> list = new ArrayList<>();
+    File photo = new File("src/test/resources/Shnake.png");
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/contacts.csv")));
+    String line = reader.readLine();
+    while (line!=null){
+      String[] split = line.split(";");
+      list.add(new Object[]{new ContactDate().withFirstname(split[0]).withLastname(split[1]).withAddress(split[2])
+      .withMail(split[3]).withMobilePhone(split[4]).withPhoto(photo)});
+      line = reader.readLine();
+    }
+    return list.iterator();
+  }
 
-  @Test
-  public void createNewContact(){
+  @DataProvider
+  public Iterator<Object[]> validGroupsJson() throws IOException {
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/contacts.json")));
+    String json = "";
+    String line = reader.readLine();
+    while (line!=null){
+      json += line;
+      line = reader.readLine();
+    }
+    Gson gson = new Gson();
+    List<ContactDate> contactDates =  gson.fromJson(json, new TypeToken<List<ContactDate>>(){}.getType());
+    return contactDates.stream().map((g) -> new Object[]{g}).collect(Collectors.toList()).iterator();
+  }
+
+  @Test(dataProvider = "validGroupsJson")
+  public void createNewContact(ContactDate contact){
     app.goTo().gotoHome();
     Contacts before = app.contact().allContact();
     app.goTo().contactPage();
-    ContactDate contact = new ContactDate()
-            .withLastname("test1")
-            .withNickname("test4")
-            .withCompany("test4")
-            .withHomePhone("test5")
-            .withGroup("Test 1");
     app.contact().createContact(contact);
     assertThat(app.contact().getContactCount(),equalTo(before.size() +1) );
     Contacts after = app.contact().allContact();
@@ -28,5 +63,6 @@ public class ContactCreation extends TestBase {
             .withAdded(contact.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()))));
 
   }
+
 
 }
