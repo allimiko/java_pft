@@ -7,6 +7,8 @@ import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.model.Groups;
 
 
+import java.io.*;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -14,12 +16,16 @@ import static org.junit.Assert.assertEquals;
 public class GroupDeletionTest extends TestBase {
 
     @BeforeMethod
-    public void ensurePreconditions(){
+    public void ensurePreconditions() throws IOException {
         app.goTo().GroupPage();
         if ( app.group().all().size() ==0) {
-            app.group().create(new GroupData().withName("Test 1").withHeader("test1"));
+            try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/groups.csv")))){
+                String line = reader.readLine();
+                    String[] split = line.split(";");
+                   GroupData groupData = new GroupData().withName(split[0]).withHeader(split[1]).withFooter(split[2]);
+                app.group().create(groupData);
+            }
         }
-
     }
 
     @Test

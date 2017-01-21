@@ -58,45 +58,46 @@ public class ContactDataGenerat {
     private void saveAsGson(List<ContactDate> coctacts, File file) throws IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         String json = gson.toJson(coctacts);
-        Writer writer = new FileWriter(file);
-        writer.write(json);
-        writer.close();
+        try (Writer writer = new FileWriter(file)){
+            writer.write(json);
+        }
+
     }
 
     private void saveAsXml(List<ContactDate> coctacts, File file) throws IOException {
         XStream xStream = new XStream();
         xStream.processAnnotations(GroupData.class);
         String xml = xStream.toXML(coctacts);
-        Writer writer = new FileWriter(file);
-        writer.write(xml);
-        writer.close();
+        try (Writer writer = new FileWriter(file)){
+            writer.write(xml);
+        }
     }
 
 
     private  void save(List<ContactDate> coctacts, File file) throws IOException {
-        Writer writer = new FileWriter(file);
-        for (ContactDate contact :coctacts){
-            writer.write(String.format("%s;%s;%s;%s;%s\n",
-                    contact.getFirstname()
-                   ,contact.getLastname()
-                    ,contact.getAddress()
-                    ,contact.getMail()
-                    ,contact.getMobilePhone()));
+        try (Writer writer = new FileWriter(file);){
+            for (ContactDate contact :coctacts){
+                writer.write(String.format("%s;%s;%s;%s;%s\n",
+                        contact.getFirstname()
+                        ,contact.getLastname()
+                        ,contact.getAddress()
+                        ,contact.getMail()
+                        ,contact.getMobilePhone()));
+            }
         }
-        writer.close();
-
     }
 
     private  List<ContactDate> generatContacts(int count) {
         List<ContactDate> coctacts =  new ArrayList<ContactDate>();
         for (int i = 0; i < count; i++){
+            int j = i;
             coctacts.add(new ContactDate()
-                    .withFirstname(String.format("Test %s", i))
-                    .withFirstname(String.format("Test %s", i))
-                    .withLastname(String.format("Test %s", i))
-                    .withAddress(String.format(" Test %s",i))
-                    .withMail(String.format("Test %s",i))
-                    .withMobilePhone(String.format("Test %s",i)));
+                    .withFirstname(String.format("Test %s", j))
+                    .withFirstname(String.format("Test %s", j))
+                    .withLastname(String.format("Test %s", j))
+                    .withAddress(String.format(" Test %s",j))
+                    .withMail(String.format("Test %s",j))
+                    .withMobilePhone(String.format("Test %s",j)));
         }
         return coctacts;
     }

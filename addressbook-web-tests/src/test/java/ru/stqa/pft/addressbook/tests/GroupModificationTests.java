@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.model.Groups;
 
+import java.io.*;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -18,29 +19,39 @@ import static org.junit.Assert.assertEquals;
 public class GroupModificationTests extends TestBase{
 
   @BeforeMethod
-  public void ensurePreconditionsGroup(){
+  public void ensurePreconditionsGroup() throws IOException {
     app.goTo().GroupPage();
     if ( app.group().all().size() ==0) {
-      app.group().create(new GroupData().withName("Test 1").withHeader("test1"));
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/groups.csv")))) {
+          String line = reader.readLine();
+          String[] split = line.split(";");
+          GroupData groupData = new GroupData().withName(split[0]).withHeader(split[1]).withFooter(split[2]);
+          app.group().create(groupData);
+        }
     }
-
   }
 
   @Test
-  public void testCroupModification(){
+  public void testCroupModification() throws IOException {
     Groups before = app.group().all();
     GroupData modifiedGroup = before.iterator().next();
+    try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/groupsModif.csv")))) {
+      String line = reader.readLine();
+      String[] split = line.split(";");
+      GroupData groupData = new GroupData().withId(modifiedGroup.getId()).withName(split[0]).withHeader(split[1]).withFooter(split[2]);
+    /*
     GroupData groupData = new GroupData()
             .withId(modifiedGroup.getId())
             .withName("Test 2")
             .withHeader("test 2")
             .withHead("Test 1")
             .withFooter("Test 1");
-    app.group().modify(groupData);
-      assertThat(app.group().count(),equalTo(before.size()));
-    Groups  after = app.group().all();
-    assertThat(after, equalTo(before.withOut(modifiedGroup).withAdded(groupData)));
+            */
+      app.group().modify(groupData);
+      assertThat(app.group().count(), equalTo(before.size()));
+      Groups after = app.group().all();
+      assertThat(after, equalTo(before.withOut(modifiedGroup).withAdded(groupData)));
+    }
+
   }
-
-
 }
