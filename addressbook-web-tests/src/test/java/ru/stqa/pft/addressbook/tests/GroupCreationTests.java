@@ -4,6 +4,8 @@ package ru.stqa.pft.addressbook.tests;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thoughtworks.xstream.XStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.GroupData;
@@ -21,6 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 
 public class GroupCreationTests extends TestBase {
+
   @DataProvider
   public Iterator<Object[]> validGroups() throws IOException {
     List<Object[]> list = new ArrayList<>();
@@ -49,7 +52,6 @@ public class GroupCreationTests extends TestBase {
       List<GroupData> groups = (List<GroupData>) xStream.fromXML(xml);
       return groups.stream().map((g) -> new Object[]{g}).collect(Collectors.toList()).iterator();
     }
-
   }
 
   @DataProvider
@@ -71,11 +73,11 @@ public class GroupCreationTests extends TestBase {
   @Test(dataProvider = "validGroupsJson")
   public void testGroupCreation(GroupData group) {
     app.goTo().GroupPage();
-    Groups before = app.group().all();
+      Groups before = app.db().groups();
     //GroupData group = new GroupData().withName("Test 1");
     app.group().create(group);
     assertThat(app.group().count(),equalTo(before.size() +1) );
-    Groups after = app.group().all();
+      Groups after = app.db().groups();
     assertThat(after, equalTo(before
             .withAdded(group.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()))));
   }

@@ -20,25 +20,25 @@ public class GroupModificationTests extends TestBase{
 
   @BeforeMethod
   public void ensurePreconditionsGroup() throws IOException {
-    app.goTo().GroupPage();
-    if ( app.group().all().size() ==0) {
+    if(app.db().groups().size() ==0){
+      app.goTo().GroupPage();
         try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/groups.csv")))) {
           String line = reader.readLine();
           String[] split = line.split(";");
           GroupData groupData = new GroupData().withName(split[0]).withHeader(split[1]).withFooter(split[2]);
           app.group().create(groupData);
-        }
+      }
     }
   }
 
   @Test
   public void testCroupModification() throws IOException {
-    Groups before = app.group().all();
+    Groups before = app.db().groups();
     GroupData modifiedGroup = before.iterator().next();
     try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/groupsModif.csv")))) {
       String line = reader.readLine();
       String[] split = line.split(";");
-      GroupData groupData = new GroupData().withId(modifiedGroup.getId()).withName(split[0]).withHeader(split[1]).withFooter(split[2]);
+     GroupData groupData = new GroupData().withId(modifiedGroup.getId()).withName(split[0]).withHeader(split[1]).withFooter(split[2]);
     /*
     GroupData groupData = new GroupData()
             .withId(modifiedGroup.getId())
@@ -47,9 +47,10 @@ public class GroupModificationTests extends TestBase{
             .withHead("Test 1")
             .withFooter("Test 1");
             */
+      app.goTo().GroupPage();
       app.group().modify(groupData);
       assertThat(app.group().count(), equalTo(before.size()));
-      Groups after = app.group().all();
+      Groups after = app.db().groups();
       assertThat(after, equalTo(before.withOut(modifiedGroup).withAdded(groupData)));
     }
 

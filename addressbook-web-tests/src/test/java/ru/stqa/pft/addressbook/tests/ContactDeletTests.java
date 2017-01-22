@@ -33,11 +33,11 @@ public class ContactDeletTests extends TestBase {
   }
     @Test
     public void testDeletTests() {
-    Contacts before = app.contact().allContact();
+      Contacts before = app.db().contacts();
     ContactDate contact = before.iterator().next();
     app.contact().deleteContact(contact);
       assertThat(app.contact().getContactCount(),equalTo(before.size()-1) );
-    Contacts after = app.contact().allContact();
+      Contacts after = app.db().contacts();
     assertThat(after, equalTo(before.withOut(contact)));
   }
 

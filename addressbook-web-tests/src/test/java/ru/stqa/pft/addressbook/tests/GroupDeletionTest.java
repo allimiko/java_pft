@@ -17,12 +17,12 @@ public class GroupDeletionTest extends TestBase {
 
     @BeforeMethod
     public void ensurePreconditions() throws IOException {
-        app.goTo().GroupPage();
-        if ( app.group().all().size() ==0) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/groups.csv")))){
+        if(app.db().groups().size() ==0){
+            app.goTo().GroupPage();
+            try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/groups.csv")))) {
                 String line = reader.readLine();
-                    String[] split = line.split(";");
-                   GroupData groupData = new GroupData().withName(split[0]).withHeader(split[1]).withFooter(split[2]);
+                String[] split = line.split(";");
+                GroupData groupData = new GroupData().withName(split[0]).withHeader(split[1]).withFooter(split[2]);
                 app.group().create(groupData);
             }
         }
@@ -30,11 +30,12 @@ public class GroupDeletionTest extends TestBase {
 
     @Test
     public void testGroupDeletion() {
-        Groups before = app.group().all();
+        Groups before = app.db().groups();
         GroupData deletedGroup = before.iterator().next();
+        app.goTo().GroupPage();
         app.group().delete(deletedGroup);
         assertThat(app.group().count(),equalTo(before.size() - 1));
-        Groups after = app.group().all();
+        Groups after = app.db().groups();
         assertThat(after, equalTo(before.withOut(deletedGroup)));
 
 

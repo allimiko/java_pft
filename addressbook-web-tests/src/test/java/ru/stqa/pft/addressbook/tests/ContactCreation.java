@@ -56,12 +56,13 @@ public class ContactCreation extends TestBase {
 
   @Test(dataProvider = "validGroupsJson")
   public void createNewContact(ContactDate contact){
-    app.goTo().gotoHome();
-    Contacts before = app.contact().allContact();
+   // app.goTo().gotoHome();
+    Contacts before = app.db().contacts();
     app.goTo().contactPage();
     app.contact().createContact(contact);
     assertThat(app.contact().getContactCount(),equalTo(before.size() +1) );
-    Contacts after = app.contact().allContact();
+   // Contacts after = app.contact().allContact();
+    Contacts after = app.db().contacts();
     assertThat(after, equalTo(before
             .withAdded(contact.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()))));
 

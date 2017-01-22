@@ -32,7 +32,7 @@ public class ContactHelper extends HelperBase {
     type(By.name("work"), contactDate.getWorkPhone());
     type(By.name("home"), contactDate.getHomePhone());
     type(By.name("address"), contactDate.getAddress());
-    attach(By.name("photo"),contactDate.getPhoto());
+//    attach(By.name("photo"),contactDate.getPhoto());
 
 
     //if (creation){
@@ -52,7 +52,7 @@ public class ContactHelper extends HelperBase {
   }
 
   public void selectContactById(int id) {
-    wd.findElement(By.id(""+id+"")).click();
+    wd.findElement(By.id(""+ id +"")).click();
 }
 
   public void deleteSelectedContact() {

@@ -20,8 +20,9 @@ public class ContactModificationTest extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditionsContact() throws IOException {
-    app.goTo().gotoHome();
-    if (!app.contact().isThereContact()) {
+    if (app.db().contacts().size() == 0){
+      app.goTo().gotoHome();
+      app.contact().isThereContact();
       app.goTo().contactPage();
       try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/contacts.csv")))) {
         String line = reader.readLine();
@@ -29,13 +30,14 @@ public class ContactModificationTest extends TestBase {
         ContactDate newContact = new ContactDate().withFirstname(split[0]).withLastname(split[1]).withAddress(split[2])
                 .withMail(split[3]).withMobilePhone(split[4]);
         app.contact().createContact(newContact);
-      }
+
+    }
     }
   }
 
   @Test
   public void testContactModification() throws IOException {
-    Contacts before = app.contact().allContact();
+    Contacts before = app.db().contacts();
     ContactDate modifiedContact = before.iterator().next();
     try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/contactsModif.csv")))) {
       String line = reader.readLine();
@@ -55,7 +57,7 @@ public class ContactModificationTest extends TestBase {
       app.contact().initContactModification(modifiedContact);
       app.contact().modification(contactDate);
       assertThat(app.contact().getContactCount(), equalTo(before.size()));
-      Contacts after = app.contact().allContact();
+      Contacts after = app.db().contacts();
       assertThat(after, equalTo(before.withAdded(contactDate).withOut(modifiedContact)));
     }
   }

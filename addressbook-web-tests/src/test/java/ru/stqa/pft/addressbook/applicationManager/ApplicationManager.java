@@ -27,8 +27,9 @@ public class ApplicationManager {
   private ContactHelper contactHelper;
   private NavigationHelper navigationHelper;
   private String broser;
+    private DbHelper dbhelper;
 
-  public ApplicationManager(String broser) {
+    public ApplicationManager(String broser) {
     this.broser = broser;
        properties = new Properties();
   }
@@ -37,6 +38,7 @@ public class ApplicationManager {
   public void init() throws IOException {
       String target = System.getProperty("target","local");
       properties.load(new FileReader(new File(String.format("src/test/resources/%s.properties",target))));
+      dbhelper = new DbHelper();
       if (Objects.equals(broser, BrowserType.CHROME)) {
         wd = new ChromeDriver();
       } else if (Objects.equals(broser, BrowserType.FIREFOX)) {
@@ -69,5 +71,9 @@ public class ApplicationManager {
 
   public ContactHelper contact() {
     return contactHelper;
+  }
+
+  public DbHelper db(){
+        return dbhelper;
   }
 }
