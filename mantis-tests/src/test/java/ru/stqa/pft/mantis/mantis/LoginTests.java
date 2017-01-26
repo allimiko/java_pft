@@ -3,6 +3,7 @@ package ru.stqa.pft.mantis.mantis;
 
 import static org.testng.AssertJUnit.assertTrue;
 
+
 import org.testng.annotations.Test;
 import ru.stqa.pft.mantis.appmanager.HttpSession;
 
@@ -17,5 +18,6 @@ public class LoginTests extends TestBase{
         HttpSession session = app.newSession();
         assertTrue(session.login("administrator","root"));
         assertTrue(session.isLoggedInAs("administrator"));
+
     }
 }
