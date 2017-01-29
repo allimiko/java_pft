@@ -64,5 +64,5 @@ public class HttpSession {
                 .format("<span class=\"italic\">%s</span>", username));
 
     }
-//"<img src=\"/images/mantis_logo.png\">", username
+
     }
