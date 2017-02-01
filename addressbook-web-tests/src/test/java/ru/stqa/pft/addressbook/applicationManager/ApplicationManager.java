@@ -7,12 +7,15 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import ru.stqa.pft.addressbook.model.ContactDate;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -39,12 +42,20 @@ public class ApplicationManager {
       String target = System.getProperty("target","local");
       properties.load(new FileReader(new File(String.format("src/test/resources/%s.properties",target))));
       dbhelper = new DbHelper();
-      if (Objects.equals(broser, BrowserType.CHROME)) {
-        wd = new ChromeDriver();
-      } else if (Objects.equals(broser, BrowserType.FIREFOX)) {
-        wd = new FirefoxDriver();
-      } else if (Objects.equals(broser, BrowserType.IE)) {
-        wd = new InternetExplorerDriver();
+
+
+      if ("".equals(properties.getProperty("selenium.server"))) {
+          if (Objects.equals(broser, BrowserType.CHROME)) {
+              wd = new ChromeDriver();
+          } else if (Objects.equals(broser, BrowserType.FIREFOX)) {
+              wd = new FirefoxDriver();
+          } else if (Objects.equals(broser, BrowserType.IE)) {
+              wd = new InternetExplorerDriver();
+          }
+      } else {
+          DesiredCapabilities capabilities = new DesiredCapabilities();
+          capabilities.setBrowserName(broser);
+          wd = new RemoteWebDriver(new URL(properties.getProperty("selenium.server")) ,capabilities);
       }
 
       wd.manage().timeouts().implicitlyWait(6, TimeUnit.SECONDS);
