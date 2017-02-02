@@ -38,7 +38,6 @@ public class HelperBase {
   public  boolean isAlertPresent() {
     try {
       wd.switchTo().alert().accept();
-      wd.switchTo().alert();
     } catch (NoAlertPresentException ex) {
       ex.printStackTrace();
 

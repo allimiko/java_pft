@@ -30,14 +30,14 @@ public class ContactModificationTest extends TestBase {
         ContactDate newContact = new ContactDate().withFirstname(split[0]).withLastname(split[1]).withAddress(split[2])
                 .withMail(split[3]).withMobilePhone(split[4]);
         app.contact().createContact(newContact);
-
     }
     }
   }
 
   @Test
   public void testContactModification() throws IOException {
-    Contacts before = app.db().contacts();
+   Contacts before = app.db().contacts();
+   // Contacts before = app.contact().allContact();
     ContactDate modifiedContact = before.iterator().next();
     try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/contactsModif.csv")))) {
       String line = reader.readLine();
@@ -58,7 +58,12 @@ public class ContactModificationTest extends TestBase {
       app.contact().modification(contactDate);
       assertThat(app.contact().getContactCount(), equalTo(before.size()));
       Contacts after = app.db().contacts();
+      //Contacts after = app.contact().allContact();
+
       assertThat(after, equalTo(before.withAdded(contactDate).withOut(modifiedContact)));
+     verifyContactListInUI();
     }
   }
+
+
 }

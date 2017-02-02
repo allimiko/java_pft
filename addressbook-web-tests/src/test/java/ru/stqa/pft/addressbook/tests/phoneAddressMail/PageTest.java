@@ -28,8 +28,8 @@ public class PageTest extends TestBase {
                     .withMail("melnik@gmail.com")
                     .withMail2("melnik@mail.ru")
                     .withHomePhone("23 14 23")
-                    .withMobilePhone("7 (068) 345 567 56")
-                    .withGroup("Test 1"));
+                    .withMobilePhone("7 (068) 345 567 56"));
+                    //.withGroup("Test 1"));
         }
     }
 

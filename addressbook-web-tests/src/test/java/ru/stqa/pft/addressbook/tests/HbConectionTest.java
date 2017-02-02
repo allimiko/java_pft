@@ -40,10 +40,12 @@ public class HbConectionTest {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         List<ContactDate> result = session.createQuery( "from ContactDate where deprecated ='0000-00-00'").list();
-        for ( ContactDate contactDate :  result ) {
-            System.out.println(contactDate );
-        }
+
         session.getTransaction().commit();
         session.close();
+        for ( ContactDate contactDate :  result ) {
+            System.out.println(contactDate );
+            System.out.println(contactDate.getGroups());
+        }
     }
 }

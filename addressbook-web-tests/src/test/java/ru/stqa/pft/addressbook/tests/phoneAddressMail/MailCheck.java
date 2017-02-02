@@ -29,8 +29,8 @@ public class MailCheck extends TestBase {
                     .withtWorkPhone("456 456")
                     .withMail("erter@gmail.com")
                     .withMail2("ertejhjh")
-                    .withMail3("ertr ")
-                    .withGroup("Test 1"));
+                    .withMail3("ertr "));
+                    //.withGroup("Test 1"));
         }
     }
 

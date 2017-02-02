@@ -3,6 +3,7 @@ package ru.stqa.pft.addressbook.tests.phoneAddressMail;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactDate;
+import ru.stqa.pft.addressbook.model.Groups;
 import ru.stqa.pft.addressbook.tests.TestBase;
 
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 public class AddressCheck extends TestBase {
     @BeforeMethod
     public void ensurePreconditions() {
+        Groups groups = app.db().groups();
         app.goTo().gotoHome();
         if (!app.contact().isThereContact()) {
             app.goTo().contactPage();
@@ -28,7 +30,8 @@ public class AddressCheck extends TestBase {
                     .withMobilePhone("345-345")
                     .withtWorkPhone("456 456")
                     .withAddress("werwerewv 34343")
-                    .withGroup("Test 1"));
+                    .inGroup(groups.iterator().next()));
+
         }
     }
 

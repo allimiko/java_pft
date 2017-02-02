@@ -25,8 +25,8 @@ public class PhoneCheck extends TestBase {
                     .withCompany("test4")
                     .withHomePhone("7 (111)")
                     .withMobilePhone("345-345")
-                    .withtWorkPhone("456 456")
-                    .withGroup("Test 1"));
+                    .withtWorkPhone("456 456"));
+                    //.withGroup("Test 1"));
         }
     }
     @Test

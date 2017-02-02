@@ -2,10 +2,14 @@ package ru.stqa.pft.addressbook.model;
 
 import com.google.gson.annotations.Expose;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import org.hibernate.annotations.ManyToAny;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "addressbook")
 public class ContactDate {
@@ -58,9 +62,6 @@ public class ContactDate {
   private String address;
 
   @Transient
-  private String group;
-
-  @Transient
   private String content;
 
   @Transient
@@ -72,6 +73,11 @@ public class ContactDate {
 
   @Transient
   private String allMail;
+
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(name = "address_in_groups",
+          joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
+  private Set<GroupData> groups = new HashSet<>();
 
   public File getPhoto() {
     return new File(photo);
@@ -188,9 +194,6 @@ public class ContactDate {
     return homePhone;
   }
 
-  public String getGroup() {
-    return group;
-  }
 
   public void setId(int id) {
     this.id = id;
@@ -198,6 +201,10 @@ public class ContactDate {
 
   public int getId() {
     return id;
+  }
+
+  public Groups getGroups() {
+    return new Groups(groups);
   }
 
   public ContactDate withFirstname(String firstname) {
@@ -230,12 +237,14 @@ public class ContactDate {
     return this;
   }
 
-  public ContactDate withGroup(String group) {
-    this.group = group;
-    return this;
-  }
+
  public ContactDate withId(int id) {
     this.id = id;
+    return this;
+  }
+
+  public ContactDate inGroup(GroupData group) {
+    groups.add(group);
     return this;
   }
 
@@ -248,7 +257,6 @@ public class ContactDate {
             '}';
   }
 
-
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -257,13 +265,15 @@ public class ContactDate {
     ContactDate that = (ContactDate) o;
 
     if (id != that.id) return false;
-    return firstname != null ? firstname.equals(that.firstname) : that.firstname == null;
+    if (firstname != null ? !firstname.equals(that.firstname) : that.firstname != null) return false;
+    return lastname != null ? lastname.equals(that.lastname) : that.lastname == null;
   }
 
   @Override
   public int hashCode() {
     int result = id;
     result = 31 * result + (firstname != null ? firstname.hashCode() : 0);
+    result = 31 * result + (lastname != null ? lastname.hashCode() : 0);
     return result;
   }
 }

@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactDate;
 import ru.stqa.pft.addressbook.model.Contacts;
 import ru.stqa.pft.addressbook.model.GroupData;
+import ru.stqa.pft.addressbook.model.Groups;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,7 +23,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ContactCreation extends TestBase {
-  @DataProvider
+  @DataProvider(name = "csv")
   public Iterator<Object[]> validContact() throws IOException {
     List<Object[]> list = new ArrayList<>();
     File photo = new File("src/test/resources/Shnake.png");
@@ -31,7 +32,7 @@ public class ContactCreation extends TestBase {
       while (line!=null){
         String[] split = line.split(";");
         list.add(new Object[]{new ContactDate().withFirstname(split[0]).withLastname(split[1]).withAddress(split[2])
-                .withMail(split[3]).withMobilePhone(split[4]).withPhoto(photo)});
+                .withMail(split[3]).withMobilePhone(split[4]).withPhoto(photo).getGroups()});
         line = reader.readLine();
       }
       return list.iterator();
@@ -54,18 +55,17 @@ public class ContactCreation extends TestBase {
 
   }
 
-  @Test(dataProvider = "validGroupsJson")
+  @Test(dataProvider = "csv")
   public void createNewContact(ContactDate contact){
-   // app.goTo().gotoHome();
+    Groups groups = app.db().groups();
     Contacts before = app.db().contacts();
     app.goTo().contactPage();
     app.contact().createContact(contact);
     assertThat(app.contact().getContactCount(),equalTo(before.size() +1) );
-   // Contacts after = app.contact().allContact();
     Contacts after = app.db().contacts();
     assertThat(after, equalTo(before
             .withAdded(contact.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()))));
-
+    verifyContactListInUI();
   }
 
 
