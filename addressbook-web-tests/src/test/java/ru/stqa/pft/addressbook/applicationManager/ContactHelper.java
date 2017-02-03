@@ -171,6 +171,20 @@ public class ContactHelper extends HelperBase {
     wd.navigate().back();
     return new ContactDate().withContent(content);
   }
+
+           public void toGroupsWithContact(ContactDate contactDate){
+       new Select(wd.findElement(By.name("group"))).selectByVisibleText(contactDate.getGroups().iterator().next().getName());
+  }
+            public void selectGroupForContact(int id) {
+        new Select(wd.findElement(By.name("to_group"))).selectByValue(String.valueOf(id));
+     }
+           public void addContactToGroup(){
+         click(By.name("add"));
+           }
+
+           public void deleteFromGroup() {
+        click(By.name("remove"));
+      }
   }
 
 
